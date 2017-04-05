@@ -1,14 +1,19 @@
 /**
  * Created by Thomas Hodges on 4/4/2017.
  * MergeSort.java
+ *
+ * Original algorithm author:
+ * Lars Vogel
+ * http://www.vogella.com/tutorials/JavaAlgorithmsMergesort/article.html
  */
 public class MergeSort {
+
     private int[] numbers;
     private int[] helper;
 
     private int number;
 
-    public void sort(int[] values) {
+    public MergeSort(int[] values) {
         this.numbers = values;
         number = values.length;
         this.helper = new int[number];
