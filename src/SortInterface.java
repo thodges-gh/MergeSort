@@ -3,4 +3,10 @@
  * SortInterface.java
  */
 public interface SortInterface {
+
+    int[] iterativeSort(int[] array) throws Exception;
+    int[] recursiveSort(int[] array) throws Exception;
+
+    public int getCount();
+    public long getTime();
 }

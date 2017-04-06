@@ -2,66 +2,71 @@
  * Created by Thomas Hodges on 4/4/2017.
  * MergeSort.java
  *
- * Original algorithm author:
- * Lars Vogel
- * http://www.vogella.com/tutorials/JavaAlgorithmsMergesort/article.html
+ * Original Algorithm Author: David Kosbie
+ * http://kosbie.net/cmu/summer-08/15-100/handouts/IterativeMergeSort.java
  */
-public class MergeSort {
+public class MergeSort implements SortInterface {
 
-    private int[] numbers;
-    private int[] helper;
+    int[] array;
 
-    private int number;
+    /////////////////////////////////////////
+    // Iterative mergeSort
+    /////////////////////////////////////////
 
-    public MergeSort(int[] values) {
-        this.numbers = values;
-        number = values.length;
-        this.helper = new int[number];
-        mergesort(0, number - 1);
+    public int[] iterativeSort(int[] a) {
+        int[] aux = new int[a.length];
+        for (int blockSize = 1; blockSize < a.length; blockSize *= 2)
+            for (int start = 0; start < a.length; start += 2 * blockSize)
+                merge(a, aux, start, start + blockSize, start + 2 * blockSize);
+        return aux;
     }
 
-    private void mergesort(int low, int high) {
-        // check if low is smaller than high, if not then the array is sorted
-        if (low < high) {
-            // Get the index of the element which is in the middle
-            int middle = low + (high - low) / 2;
-            // Sort the left side of the array
-            mergesort(low, middle);
-            // Sort the right side of the array
-            mergesort(middle + 1, high);
-            // Combine them both
-            merge(low, middle, high);
+    /////////////////////////////////////////
+    // Recursive mergeSort, adapted from:
+    // Sedgewick and Wayne, Introduction to Programming in Java
+    // http://www.cs.princeton.edu/introcs/42sort/MergeSort.java.html
+    /////////////////////////////////////////
+
+    private void merge(int[] a, int[] aux, int lo, int mid, int hi) {
+        // DK: add two tests to first verify "mid" and "hi" are in range
+        if (mid >= a.length) return;
+        if (hi > a.length) hi = a.length;
+        int i = lo, j = mid;
+        for (int k = lo; k < hi; k++) {
+            if (i == mid) aux[k] = a[j++];
+            else if (j == hi) aux[k] = a[i++];
+            else if (a[j] < a[i]) aux[k] = a[j++];
+            else aux[k] = a[i++];
         }
+        // copy back
+        for (int k = lo; k < hi; k++)
+            a[k] = aux[k];
     }
 
-    private void merge(int low, int middle, int high) {
-
-        // Copy both parts into the helper array
-        for (int i = low; i <= high; i++) {
-            helper[i] = numbers[i];
-        }
-
-        int i = low;
-        int j = middle + 1;
-        int k = low;
-        // Copy the smallest values from either the left or the right side back
-        // to the original array
-        while (i <= middle && j <= high) {
-            if (helper[i] <= helper[j]) {
-                numbers[k] = helper[i];
-                i++;
-            } else {
-                numbers[k] = helper[j];
-                j++;
-            }
-            k++;
-        }
-        // Copy the rest of the left side of the array into the target array
-        while (i <= middle) {
-            numbers[k] = helper[i];
-            k++;
-            i++;
-        }
-
+    private void recursiveSort(int[] a, int[] aux, int lo, int hi) {
+        // base case
+        if (hi - lo <= 1) return;
+        // sort each half, recursively
+        int mid = lo + (hi - lo) / 2;
+        recursiveSort(a, aux, lo, mid);
+        recursiveSort(a, aux, mid, hi);
+        // merge back together
+        merge(a, aux, lo, mid, hi);
     }
+
+    public int[] recursiveSort(int[] a) {
+        int n = a.length;
+        int[] aux = new int[n];
+        recursiveSort(a, aux, 0, n);
+        return aux;
+    }
+
+    public int getCount() {
+        return 0;
+    }
+
+    public long getTime() {
+        return 0;
+    }
+
 }
