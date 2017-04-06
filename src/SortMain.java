@@ -8,7 +8,7 @@ public class SortMain {
 
     public static void main(String[] args) throws Exception {
         int[] sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000} ;
-        BenchmarkSorts bSorts = new BenchmarkSorts(sizes);
+        BenchmarkSorts benchmarkSorts = new BenchmarkSorts(sizes);
 //        int[] unsortedArray = {5, 2, 9, 3, 5, 2, 1, 0};
 //        SortInterface sortInterface = new MergeSort();
 //        int[] sortedArrayIterative = sortInterface.iterativeSort(unsortedArray);
