@@ -8,16 +8,16 @@ public class BenchmarkSorts {
 
     MergeSort mergeSort = new MergeSort();
 
-    public BenchmarkSorts(int[] sizes) throws Exception {
+    public BenchmarkSorts(int[] sizes) {
 
     }
 
-    private BenchmarkSorts(int n) throws Exception {
+    private BenchmarkSorts(int n) {
 
     }
 
 
-    public void runSorts() throws Exception {
+    public void runSorts() {
 
     }
 
