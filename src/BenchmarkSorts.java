@@ -31,13 +31,17 @@ public class BenchmarkSorts {
         IntStream.range(0, NUMBER_OF_RUNS).forEach(i -> {
             array = new int[n];
             IntStream.range(0, n).forEach(j -> array[j] = new Random().nextInt(1001));
-            runSorts();
+            try {
+                runSorts();
+            } catch (UnsortedException e) {
+                System.out.println(e.getMessage());
+            }
         });
         displayReport(n);
     }
 
 
-    public void runSorts() {
+    public void runSorts() throws UnsortedException {
 
         int[] sortedIterativeArray = mergeSort.iterativeSort(array);
         int returnCount = mergeSort.getCount();
