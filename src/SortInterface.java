@@ -4,9 +4,9 @@
  */
 public interface SortInterface {
 
-    int[] iterativeSort(int[] array) throws Exception;
-    int[] recursiveSort(int[] array) throws Exception;
+    int[] iterativeSort(int[] array) throws UnsortedException;
+    int[] recursiveSort(int[] array) throws UnsortedException;
 
-    public int getCount();
-    public long getTime();
+    int getCount();
+    long getTime();
 }

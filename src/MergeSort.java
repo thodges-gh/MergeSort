@@ -1,7 +1,7 @@
 /**
  * Created by Thomas Hodges on 4/4/2017.
  * MergeSort.java
- * <p>
+ *
  * Original Algorithm Author: David Kosbie
  * http://kosbie.net/cmu/summer-08/15-100/handouts/IterativeMergeSort.java
  */
@@ -126,7 +126,7 @@ public class MergeSort implements SortInterface {
         return time;
     }
 
-    public void checkSortedArray(int[] list) throws UnsortedException {
+    private void checkSortedArray(int[] list) throws UnsortedException {
         for (int i = 0; i < list.length - 1; i++) {
             if (list[i] > list[i + 1]) {
                 for (int j = 0; i < list.length - 1; j++) {

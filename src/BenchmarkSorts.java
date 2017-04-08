@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -10,32 +9,39 @@ public class BenchmarkSorts {
 
     private final int NUMBER_OF_RUNS = 50;
 
-    int[] array;
-    int[] sortedIterativeArray;
-    int[] sortedRecursiveArray;
-    int iterativeCount = 0;
-    int recursiveCount = 0;
-    int iterativeIndex = 0;
-    int recursiveIndex = 0;
-    long iterativeTime, recursiveTime;
-    int [] iterativeCountLog = new int [50];
-    int [] recursiveCountLog = new int [50];
-    long [] iterativeTimeLog = new long[50];
-    long []recursiveTimeLog = new long[50];
+    private int[] array;
+    private int[] sortedIterativeArray;
+    private int[] sortedRecursiveArray;
+    private int iterativeCount = 0;
+    private int recursiveCount = 0;
+    private int iterativeIndex = 0;
+    private int recursiveIndex = 0;
+    private long iterativeTime, recursiveTime;
+    private int [] iterativeCountLog = new int[NUMBER_OF_RUNS];
+    private int [] recursiveCountLog = new int[NUMBER_OF_RUNS];
+    private long [] iterativeTimeLog = new long[NUMBER_OF_RUNS];
+    private long []recursiveTimeLog = new long[NUMBER_OF_RUNS];
 
-    MergeSort mergeSort = new MergeSort();
+    private MergeSort mergeSort = new MergeSort();
 
     public BenchmarkSorts(int[] sizes) {
+
+        // Creates benchmarks based on the input array size
         IntStream.range(0, sizes.length).forEach(i -> new BenchmarkSorts(sizes[i]));
     }
 
     private BenchmarkSorts(int n) {
+
+        // Outer loop 50 times (NUMBER_OF_RUNS)
         IntStream.range(0, NUMBER_OF_RUNS).forEach(i -> {
             array = new int[n];
+            // Inner loop based on the array size (n)
             IntStream.range(0, n).forEach(j -> {
                 Random random = new Random();
                 array[j] = random.nextInt(1000);
             });
+
+            // Runs the sort and produces output if an UnsortedException is found
             try {
                 runSorts();
             } catch (UnsortedException e) {
@@ -46,8 +52,9 @@ public class BenchmarkSorts {
     }
 
 
-    public void runSorts() throws UnsortedException {
+    private void runSorts() throws UnsortedException {
 
+        // Runs iterative sort
         sortedIterativeArray = mergeSort.iterativeSort(array);
         int returnCount = mergeSort.getCount();
         long returnTime = mergeSort.getTime();
@@ -57,6 +64,7 @@ public class BenchmarkSorts {
         iterativeTimeLog[iterativeIndex] = returnTime;
         iterativeIndex++;
 
+        // Runs recursive sort
         sortedRecursiveArray = mergeSort.recursiveSort(array);
         returnCount = mergeSort.getCount();
         returnTime = mergeSort.getTime();
@@ -67,33 +75,56 @@ public class BenchmarkSorts {
         recursiveIndex++;
     }
 
-    public void displayReport(int n) {
-        double iterativeAverageCount, iterativeAverageTime, recursiveAverageCount, recursiveAverageTime;
+    private void displayReport(int arraySize) {
+
+        // Sets local variables
+        double iterativeAverageCount = 0;
+        double iterativeAverageTime = 0;
+        double recursiveAverageCount = 0;
+        double recursiveAverageTime = 0;
+        double iterativeVarianceCount = 0;
+        double iterativeVarianceTime = 0;
+        double recursiveVarianceCount = 0;
+        double recursiveVarianceTime = 0;
         double iterativeSDCount = 0;
         double iterativeSDTime = 0;
         double recursiveSDCount = 0;
         double recursiveSDTime = 0;
 
-        iterativeAverageCount = iterativeCount / 49;
-        iterativeAverageTime = iterativeTime / 49;
-        recursiveAverageCount = recursiveCount / 49;
-        recursiveAverageTime = recursiveTime / 49;
-
-        for (int i = 1; i < NUMBER_OF_RUNS; i++){
-            iterativeSDCount = iterativeSDCount + Math.pow((iterativeCountLog[i] - iterativeAverageCount), 2);
-            iterativeSDTime = iterativeSDTime + Math.pow((iterativeTimeLog[i] - iterativeAverageTime), 2);
-            recursiveSDCount = recursiveSDCount + Math.pow((recursiveCountLog[i] - recursiveAverageCount), 2);
-            recursiveSDTime = recursiveSDTime + Math.pow((recursiveTimeLog[i] - recursiveAverageTime), 2);
+        // Calculates averages
+        for (int i = 0; i < NUMBER_OF_RUNS; i++) {
+            iterativeAverageCount += iterativeCountLog[i];
+            iterativeAverageTime += iterativeTimeLog[i];
+            recursiveAverageCount += recursiveCountLog[i];
+            recursiveAverageTime += recursiveTimeLog[i];
         }
 
-        iterativeSDCount = Math.pow(iterativeSDCount, .5) / n;
-        iterativeSDTime = Math.pow(iterativeSDTime, .5) / n;
-        recursiveSDCount = Math.pow(recursiveSDCount, .5) / n;
-        recursiveSDTime = Math.pow(recursiveSDTime, .5) / n;
+        iterativeAverageCount = iterativeAverageCount / arraySize;
+        iterativeAverageTime = iterativeAverageTime / arraySize;
+        recursiveAverageCount = recursiveAverageCount / arraySize;
+        recursiveAverageTime = recursiveAverageTime / arraySize;
 
-        System.out.println("Data Set Size (n): " + n +
-//                    "\nIterative array: " + Arrays.toString(sortedIterativeArray) +
-//                    "\nRecursive array: " + Arrays.toString(sortedRecursiveArray) +
+        // Calculates standard deviations
+        for (int i = 0; i < NUMBER_OF_RUNS; i++) {
+            iterativeVarianceCount += Math.pow(iterativeAverageCount - iterativeCountLog[i], 2);
+            iterativeVarianceTime += Math.pow(iterativeAverageTime - iterativeTimeLog[i], 2);
+            recursiveVarianceCount += Math.pow(recursiveAverageCount - recursiveCountLog[i], 2);
+            recursiveVarianceTime += Math.pow(recursiveAverageTime - recursiveTimeLog[i], 2);
+        }
+
+        iterativeVarianceCount = iterativeVarianceCount / arraySize;
+        iterativeVarianceTime = iterativeVarianceTime / arraySize;
+        recursiveVarianceCount = recursiveVarianceCount / arraySize;
+        recursiveVarianceTime = recursiveVarianceTime / arraySize;
+
+        iterativeSDCount = Math.sqrt(iterativeVarianceCount);
+        iterativeSDTime = Math.sqrt(iterativeVarianceTime);
+        recursiveSDCount = Math.sqrt(recursiveVarianceCount);
+        recursiveSDTime = Math.sqrt(recursiveVarianceTime);
+
+
+        // Produces output
+        System.out.println("Data Set Size (n): " + arraySize +
                     "\n\tIterative Selection Sort Results: \t\t\t\t\tRecursive Selection Sort Results:" +
                     "\n\tAverage Critical Operation Count: " + Math.round(iterativeAverageCount) +
                         "\t\t\tAverage Critical Operation Count: " + Math.round(recursiveAverageCount) +
