@@ -10,7 +10,6 @@ public class MergeSort implements SortInterface {
     int count = 0;
     long timeStart = 0;
     long timeEnd = 0;
-    long time = 0;
 
     /////////////////////////////////////////
     // Iterative mergeSort
@@ -115,11 +114,16 @@ public class MergeSort implements SortInterface {
     }
 
     public int getCount() {
-        return count;
+        int result = count;
+        count = 0;
+        return result;
     }
 
     public long getTime() {
-        return timeEnd - timeStart;
+        long time = timeEnd - timeStart;
+        timeEnd = 0;
+        timeStart = 0;
+        return time;
     }
 
     public void checkSortedArray(int[] list) throws UnsortedException {
@@ -128,8 +132,8 @@ public class MergeSort implements SortInterface {
                 for (int j = 0; i < list.length - 1; j++) {
                     System.out.println(" " + list[j]);
                 }
-                throw new UnsortedException("The array was nor sorted correctly: \n" +
-                        list[i] + " at indices " + i + " and " + list[i + 1] + " at indices " + (i + 1));
+                throw new UnsortedException("The array was not sorted correctly: \n" +
+                        list[i] + " at index " + i + " and " + list[i + 1] + " at index " + (i + 1));
             }
         }
     }
